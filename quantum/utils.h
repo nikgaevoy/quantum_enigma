@@ -15,7 +15,7 @@ size_t measure_suffix(vector<complex_t> &state, size_t suffix, flt val)
 		{
 			for (size_t k = 0; k < state.size(); k++)
 				if (k / (state.size() >> suffix) == i)
-					state[k] /= prob;
+					state[k] /= sqrt(prob);
 				else
 					state[k] = 0;
 

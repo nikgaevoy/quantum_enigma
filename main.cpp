@@ -56,7 +56,7 @@ unsigned try_x(unsigned n, unsigned x)
 
 unsigned Shor()
 {
-	const unsigned n = 1u << 8u;
+	const unsigned n = 243;
 	uniform_int_distribution<unsigned> uid(1, n - 1);
 
 	for (ever) // :)
