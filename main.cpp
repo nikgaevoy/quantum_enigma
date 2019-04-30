@@ -3,11 +3,6 @@
 #include "quantum/gates.h"
 
 
-const size_t qubits = 17; /// causes bad_alloc if >= 28
-const size_t A_part = 9;
-const size_t B_part = qubits - A_part;
-
-
 unsigned check(unsigned n, unsigned x, unsigned r)
 {
 	if (r % 2 == 1)
@@ -30,6 +25,17 @@ unsigned check(unsigned n, unsigned x, unsigned r)
 
 unsigned try_x(unsigned n, unsigned x)
 {
+	unsigned A_part = 1, B_part = 1;
+
+	while ((1u << A_part) < n * n)
+		A_part++;
+	while ((1u << B_part) < n)
+		B_part++;
+
+	unsigned qubits = A_part + B_part; /// causes bad_alloc if >= 28
+
+	cout << "qubits: " << qubits << endl;
+
 	uniform_real_distribution<flt> urd(0, 1);
 
 	vector<complex_t> state(1u << qubits);
@@ -45,18 +51,36 @@ unsigned try_x(unsigned n, unsigned x)
 
 	auto A = measure_suffix(state, qubits, urd(mt));
 
+	auto M = 1u << A_part;
+
 	assert((A >> A_part) == B);
-	A &= (1u << A_part) - 1;
+	A &= M - 1;
 
-	auto r = gcd(A, (1u << A_part));
+	vector<unsigned> fr;
 
-	return check(n, x, r);
+	get_continued_fraction(A, M, fr);
+
+	for (size_t i = 1; i <= fr.size(); i++)
+	{
+		unsigned p, q;
+
+		get_fraction(fr.begin(), fr.begin() + i, p, q);
+
+		if (q > n)
+			break;
+
+		auto d = check(n, x, q);
+
+		if (d != 0)
+			return d;
+	}
+
+	return 0;
 }
 
 
-unsigned Shor()
+unsigned Shor(unsigned n)
 {
-	const unsigned n = 243;
 	uniform_int_distribution<unsigned> uid(1, n - 1);
 
 	for (ever) // :)
@@ -75,8 +99,6 @@ unsigned Shor()
 
 			if (d != 0)
 				return d;
-			else
-				cout << "fail" << endl;
 		}
 	}
 }
@@ -88,7 +110,7 @@ int main()
 	cin.tie(nullptr);
 	cout << setprecision(4);
 
-	cout << Shor() << endl;
+	cout << Shor(55) << endl;
 
 	cout << "clock: " << clock() / (flt) CLOCKS_PER_SEC << endl;
 
