@@ -29,9 +29,9 @@ T gcd(T a, T b)
 
 
 template<class T>
-T powmod(ull x, ull y, T mod)
+T powmod(T x, ull y, T mod)
 {
-	return y == 0 ? 1 : (y % 2 == 0 ? sqr(powmod(x, y / 2, mod)) : x * powmod(x, y - 1, mod)) % mod;
+	return y == 0 ? 1 : (y % 2 == 0 ? sqr((ull) powmod(x, y / 2, mod)) : x * (ull) powmod(x, y - 1, mod)) % mod;
 }
 
 
