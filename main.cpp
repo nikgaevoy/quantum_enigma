@@ -110,7 +110,7 @@ int main()
 	cin.tie(nullptr);
 	cout << setprecision(4);
 
-	cout << Shor(55) << endl;
+	cout << Shor(121) << endl;
 
 	cout << "clock: " << clock() / (flt) CLOCKS_PER_SEC << endl;
 
